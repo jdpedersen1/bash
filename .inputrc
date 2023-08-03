@@ -21,7 +21,7 @@ set echo-control-characters off
 
 
 # Bash Keybindings
-"\C-f":"cd /home/jake/.config/"
+"\C-f":"cd ~/.config/"
 "\C-b":"cd ..\n"
 "\C-h":"cd\n"
 "\C-w":"webserver\n"
