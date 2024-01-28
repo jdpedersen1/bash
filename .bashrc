@@ -1,51 +1,37 @@
 #####---------- EXPORTS ----------###
-export BROWSER="brave-browser"
-export EDITOR="vim"
-export VISUAL="vim"
+export BROWSER="brave-browser-stable"
+export EDITOR="nvim -u $HOME/.config/nvim/init.lua"
+export VISUAL="nvim -u $HOME/.config/nvim/init.lua"
 export MYVIMRC="$HOME/.config/vim/.vimrc"
 export VIMINIT="source $MYVIMRC"
 export LESSHISTFILE=-
 export HISTFILE="$HOME/.config/bash/.bash_history"
 export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
-#export QT_QPA_PLATFORMTHEME=qt5ct
-export PATH="$PATH:$HOME/.local/scripts/:$HOME/.local/bin/:$HOME/.local/scripts/dmenu/:$HOME/.cargo/bin"
-export CDPATH=".:$HOME:$HOME/.config/:$HOME/.local/:$HOME/.local/share/:$HOME/.local/programs"
-export LIBVIRT_DEFAULT_URI='qemu:///system'
-export CSCOPE_EDITOR="vim"
+export QT_QPA_PLATFORMTHEME=qt5ct
+export QT_QPA_PLATFORM=xcb
+export HYPRSHOT_DIR="$HOME/Images/Pictures/Screenshots"
+export INPUTRC=/home/jake/.config/bash/.inputrc
+export GIT_CONFIG_GLOBAL=/home/jake/.config/git/gitconfig
+
+source /home/jake/.config/bash/bash_aliases
 
 ###---------- SHELL OPTIONS -------###
 
-#neofetch
+shopt -s autocd
+
 ###---------- DECORATION ----------###
-#logo
-#case "$TERM" in
-    #kitty)
-        #kitty #+kitten icat --align left $HOME/Media/Pictures/logo.gif
-        #printf "< "$(echo $DESKTOP_SESSION | cut -d '/' -f 5)" SYS INFO >\n\n" | tr '[:lower:]' '[:upper:]'
-        #printf "\e[1;37m|-------------------------------------------------------------------------|\n\n"
-        #cat $HOME/.local/share/sysinfo.txt; printf "\n\n"
-        #printf "|-------------------------------------------------------------------------|\n\n"
-        #;;
-#    st-256color)
-#        pfetch
-#        ;;
-#    alacritty)
-#        neofetch
-#        ;;
-#esac
 
-#printf " SYSTEM INFO ]"
-#printf "\n\n"
-#cat $HOME/.local/share/sysinfo.txt; printf "\n\n"
+if [ "${TERM}" == xterm-256color ]; then
+  \cat ~/.local/sysfetch/logo2
+  printf "\e[1;37m|--------------------| \e[1;36mSys Info\e[1;37m |---------------------|\n"
+  printf "                      ^^^^^^^^^^\n"
+  \cat ~/.local/sysfetch/sysinfo.txt
+  printf "\n\n"
+  printf "|-----------------------------------------------------|\n\n"
+elif [ "${TERM}" == xterm-kitty ]; then
+  kitty +kitten icat --align left "${HOME}"/Images/mosh/photo1.gif
+fi
 
-###----------------- CD COMM ------------------------###
-
-#cd() {
-#    [[ $# -eq 0 ]] && return
-#    builtin cd "$@" || exit 
-#}
-
-alias lsp="lsd -a | fzfimg.sh --preview-window=bottom:75%"
 
 ###------------------- PROMPT -----------------------###
 
@@ -62,10 +48,7 @@ function parse_git_dirty {
 }
 
 parse_git_branch() {
-  # Long form
   git rev-parse --abbrev-ref HEAD 2> /dev/null
- # Short form
-  # git rev-parse --abbrev-ref HEAD 2> /dev/null | sed -e 's/.*\/\(.*\)/\1/'
 }
 
 prompt_comment() {
@@ -74,14 +57,8 @@ prompt_comment() {
     cat "$MESSAGE"
 }
 
-#PS1="\e[00;36m\]┌─[ \e[00;37m\]\T \d \e[00;36m\]]──\e[00;31m\]>\e[00;37m\] \u\e[00;31m\]@\e[00;37m\]\h\n\e[00;36m\]|\n\e[00;36m\]└────\e[00;31m\]> \e[00;37m\]\w \e[00;31m\]\$ \e[01;37m\]"
-#PS1="\[\e[01;37m\]{ \[\e[01;34m\]\w \[\e[01;37m\]} \[\e[01;35m\]\[\$ \]\[\e[01;37m\]"
-#PS1="\[\e[1;36m\]\$(parse_git_branch)\[\033[31m\]\$(parse_git_dirty)\[\033[00m\]\n\w\[\e[1;31m\] \[\e[1;36m\]\[\e[1;37m\] "PS1="\[\e[1;33m\]\$(parse_git_branch)\[\033[34m\]\$(parse_git_dirty)\n\[\033[1;36m\]  \[\e[1;37m\] \w \[\e[1;37m\]\[\e[0;37m\] "
-PS1="\[\e[1;33m\]\$(parse_git_branch)\[\033[34m\]\$(parse_git_dirty)\n\[\033[1;33m\]  \[\e[1;37m\] \w \[\e[1;36m\]\[\e[0;37m\] "
+PS1="\[\e[1;31m\]\$(parse_git_branch)\[\033[34m\]\$(parse_git_dirty)\n\[\033[1;33m\]  \[\e[1;37m\] \w \[\e[1;36m\]\[\e[0;37m\] "
 
-###---------- ALIASES ----------###
-
-. /home/jake/.config/bash/bash_aliases
 
 ###---------- ARCHIVE EXTRACT ----------###
 
@@ -133,3 +110,4 @@ if test -n "$KITTY_INSTALLATION_DIR" -a -e "$KITTY_INSTALLATION_DIR/shell-integr
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
+. "$HOME/.cargo/env"
