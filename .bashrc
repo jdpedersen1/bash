@@ -1,19 +1,13 @@
 #####---------- EXPORTS ----------###
-export BROWSER="brave-browser-stable"
-export EDITOR="nvim -u $HOME/.config/nvim/init.lua"
-export VISUAL="nvim -u $HOME/.config/nvim/init.lua"
-export MYVIMRC="$HOME/.config/vim/.vimrc"
-export VIMINIT="source $MYVIMRC"
-export LESSHISTFILE=-
-export HISTFILE="$HOME/.config/bash/.bash_history"
-export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
-export QT_QPA_PLATFORMTHEME=qt5ct
-export QT_QPA_PLATFORM=xcb
-export HYPRSHOT_DIR="$HOME/Images/Pictures/Screenshots"
-export INPUTRC=/home/jake/.config/bash/.inputrc
-export GIT_CONFIG_GLOBAL=/home/jake/.config/git/gitconfig
-
+source /home/jake/.config/bash/env_vars
 source /home/jake/.config/bash/bash_aliases
+cd() {
+  if [ -z "$1" ]; then
+    builtin cd
+  else
+    builtin cd "$1" && la
+  fi
+}
 
 ###---------- SHELL OPTIONS -------###
 
@@ -21,16 +15,16 @@ shopt -s autocd
 
 ###---------- DECORATION ----------###
 
-if [ "${TERM}" == xterm-256color ]; then
-  \cat ~/.local/sysfetch/logo2
-  printf "\e[1;37m|--------------------| \e[1;36mSys Info\e[1;37m |---------------------|\n"
-  printf "                      ^^^^^^^^^^\n"
-  \cat ~/.local/sysfetch/sysinfo.txt
-  printf "\n\n"
-  printf "|-----------------------------------------------------|\n\n"
-elif [ "${TERM}" == xterm-kitty ]; then
-  kitty +kitten icat --align left "${HOME}"/Images/mosh/photo1.gif
-fi
+#if [ "${TERM}" == xterm-256color ]; then
+#  \cat ~/.local/sysfetch/logo2
+#  printf "\e[1;37m|--------------------| \e[1;36mSys Info\e[1;37m |---------------------|\n"
+#  printf "                      ^^^^^^^^^^\n"
+#  \cat ~/.local/sysfetch/sysinfo.txt
+#  printf "\n\n"
+#  printf "|-----------------------------------------------------|\n\n"
+#elif [ "${TERM}" == xterm-kitty ]; then
+#  kitty +kitten icat --align left "${HOME}"/Images/mosh/photo1.gif
+#fi
 
 
 ###------------------- PROMPT -----------------------###
@@ -57,7 +51,47 @@ prompt_comment() {
     cat "$MESSAGE"
 }
 
-PS1="\[\e[1;31m\]\$(parse_git_branch)\[\033[34m\]\$(parse_git_dirty)\n\[\033[1;33m\]  \[\e[1;37m\] \w \[\e[1;36m\]\[\e[0;37m\] "
+PYTHON_ICON="[  ] "  # Snake emoji for Python
+RUST_ICON="\U1F680"    # Rocket emoji for Rust
+BASH_ICON="[  ] "        # No icon for directories with multiple file types
+HASKELL_ICON="[  ] "
+JAVA_ICON="[  ] "
+DEFAULT_ICON=""
+
+
+# Function to determine directory file types
+function set_prompt_icon() {
+    # Get the file extensions in the current directory
+    extensions=$(find . -maxdepth 1 -type f | sed -n 's/.*\.//p' | sort | uniq)
+
+    # Count the number of unique file extensions
+    count=$(echo "$extensions" | wc -l)
+
+    # Check if there is only one type of file in the directory
+    if [ "$count" -eq 1 ]; then
+        case "$extensions" in
+            py)
+                echo -e "$PYTHON_ICON"
+                ;;
+            rs)
+                echo -e "$RUST_ICON"
+                ;;
+            sh)
+                echo -e "$BASH_ICON"
+                ;;
+            hs)
+                echo -e "$HASKELL_ICON"
+                ;;
+            java)
+                echo -e "$JAVA_ICON"
+
+        esac
+    else
+        echo -e "$DEFAULT_ICON"
+    fi
+}
+
+PS1="\[\e[1;31m\]\$(parse_git_branch)\[\033[34m\]\$(parse_git_dirty)\n\[\033[1;30m\]  \[\e[1;37m\] \w \[\e[1;33m\]\$(set_prompt_icon)󰅂\[\e[0;37m\] "
 
 
 ###---------- ARCHIVE EXTRACT ----------###
@@ -101,7 +135,6 @@ export LESS_TERMCAP_so=$'\e[01;34m'
 export LESS_TERMCAP_ue=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;4;34m'
 
-#eval "$(zoxide init bash)"
 
 # BEGIN_KITTY_SHELL_INTEGRATION
 if test -n "$KITTY_INSTALLATION_DIR" -a -e "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; then source "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; fi
@@ -110,4 +143,4 @@ if test -n "$KITTY_INSTALLATION_DIR" -a -e "$KITTY_INSTALLATION_DIR/shell-integr
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
-. "$HOME/.cargo/env"
+#. "$HOME/.cargo/env"

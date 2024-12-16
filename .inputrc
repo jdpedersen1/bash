@@ -8,6 +8,7 @@ set completion-query-items 1000
 
 set echo-control-characters Off
 
+
 "\e[A": history-search-backward
 "\e[B": history-search-foreward
 
@@ -19,4 +20,4 @@ set echo-control-characters Off
 "\C-h":"cd\n"
 "\C-w":"webserver\n"
 "\es":"\C-asudo \C-e"
-
+"\C-p":
