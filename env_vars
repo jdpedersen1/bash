@@ -17,3 +17,4 @@ export INPUTRC=/home/jake/.config/bash/.inputrc
 export GIT_CONFIG_GLOBAL=/home/jake/.config/git/gitconfig
 export NOTES_DIR=/home/jake/Projects/notes
 export LOCK_COMMAND="i3lock"
+
